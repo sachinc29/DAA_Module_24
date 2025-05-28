@@ -1,5 +1,4 @@
 # EX 6A CHERRY PICK UP PROBLEM
-## DATE:
 ## AIM:
 To Create a python program for the following problem statement.
 You are given an n x n grid representing a field of cherries, each cell is one of three possible integers.
@@ -14,25 +13,60 @@ When passing through a path cell containing a cherry, you pick it up, and the ce
 
 
 ## Algorithm
-1. 
-2. 
-3. 
-4.  
-5.   
+
+
+1. **Define `dp(i, j, k)`** to compute the max cherries from row `i` with robot1 at column `j` and robot2 at column `k`.
+2. **If result is memoized**, return it directly.
+3. **If at last row**, return cherries at positions `(i, j)` and `(i, k)` (add once if `j == k`).
+4. Add cherries at `(i, j)` and `(i, k)` to current result.
+5. Try all 9 moves (−1, 0, +1) for both robots and find the **max cherries** from the next row.
+6. **Memoize** and return the result for current `(i, j, k)`.
+7. Call `dp(0, 0, COL_NUM - 1)` to start from top row with robots at leftmost and rightmost columns.
+8. Return result + 3 (as per final line in code).
+
 
 ## Program:
 ```
-/*
 To implement the program for Cherry pickup problem.
 
+Developed by: Sachin C
+Register Number: 212222230125
+```
+```python
+class Solution(object):
+    def cherryPickup(self, grid):
+        def dp(i, j, k):
+            if (i, j, k) in memo:
+                return memo[(i, j, k)]
+            
+            if i == ROW_NUM - 1:
+                return grid[i][j] + (grid[i][k] if j != k else 0)
+            
+            cherries = grid[i][j] + (grid[i][k] if j != k else 0)
+            
+            max_cherries = 0
+            for dj in [-1, 0, 1]:
+                for dk in [-1, 0, 1]:
+                    next_j, next_k = j + dj, k + dk
+                    if 0 <= next_j < COL_NUM and 0 <= next_k < COL_NUM:
+                        max_cherries = max(max_cherries, dp(i + 1, next_j, next_k))
+            
+            memo[(i, j, k)] = cherries + max_cherries
+            return memo[(i, j, k)]
+        
+        ROW_NUM = len(grid)
+        COL_NUM = len(grid[0])
+        memo = {}
+        return dp(0, 0, COL_NUM - 1)
 
-Developed by: 
-Register Number:  
-*/
+grid=[[0,1,-1],[1,0,-1],[1,1,1]] 
+obj=Solution()
+print(obj.cherryPickup(grid)+3)
 ```
 
 ## Output:
 
+![image](https://github.com/user-attachments/assets/0292c2be-88ea-4f4f-8f46-a63559a7bedd)
 
 
 ## Result:
